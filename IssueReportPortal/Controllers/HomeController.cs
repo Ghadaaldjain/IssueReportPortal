@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using IssueReportPortal.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Azure.ServiceBus;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace IssueReportPortal.Controllers
 {
@@ -25,6 +28,23 @@ namespace IssueReportPortal.Controllers
 
             public IActionResult Index()
         {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> IndexAsync(string IssesContent, string UrgencyLevel)
+        {
+
+            IQueueClient queueClient = new QueueClient(_configuration.GetConnectionString("QueueConnectionString"), _configuration["QueueName"]);
+            var JSONData = JsonConvert.SerializeObject(new { IssesContent, UrgencyLevel });
+            var MsgID = Guid.NewGuid().ToString();
+            var issueMessage = new Message(Encoding.UTF8.GetBytes(JSONData))
+            {
+                MessageId = MsgID,
+                ContentType = "application/json"
+            };
+            await queueClient.SendAsync(issueMessage).ConfigureAwait(false);
+
+            ViewBag.Message = String.Format("Thank you for reporting, this is the Id of the issue: {0}.", MsgID);
             return View();
         }
 
