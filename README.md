@@ -1,7 +1,9 @@
 # IssueReportPortal
 
 
-This project aims to demonstrate how to create a message based system With the idea of an issue reporting portal where users can describe the issue faced, and select is urgency level.  using the following Azure services: </br>
+This project aims to demonstrate how to create a message based system, with the idea of an Issue Reporting Portal where users can describe the issue faced, and select is urgency level, if urgent, an email will be sent to the admin, then all issues will be logged in Cosmos DB.<br/>
+<br/>
+Using the following Azure services: </br>
   1- Azure Web Apps </br>
   2- ServiceBus </br>
   3- Azure Functions </br>
